@@ -202,7 +202,7 @@ SELECT * FROM mascota INNER JOIN propietario ON mascota.id_propietario = propiet
 
 SELECT * FROM solicitud INNER JOIN empleado ON solicitud.id_empleado = empleado.id_empleado WHERE empleado.nombre = 'maria muñoz';--las solicitudes que pertenecen a la empleada maria muñoz
 
-SELECT mascota.nombre,propietario.nombre FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre = 'Camilo murillo';--Las mascotas que pertenecen a camilo murillo
+SELECT * FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre = 'Camilo murillo';--Las mascotas que pertenecen al propietario camilo murillo
 
 SELECT factura.total,servicio.nombre FROM factura RIGHT JOIN servicio ON factura.id_servicio = servicio.id_servicio WHERE factura.id_factura IS NULL;-- Los campos que son nulos en la factura
 
