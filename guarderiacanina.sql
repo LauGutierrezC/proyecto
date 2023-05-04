@@ -200,7 +200,7 @@ SELECT * FROM propietario WHERE nombre LIKE '%z';--Todos los nombres que termina
 
 SELECT * FROM mascota INNER JOIN propietario ON mascota.id_propietario = propietario.id_propietario WHERE propietario.nombre = 'samuel andres peña';--Mascotas que pertenecen a Samuel andres peña
 
-SELECT * FROM solicitud INNER JOIN empleado ON solicitud.id_empleado = empleado.id_empleado WHERE empleado.nombre = 'maria muñoz';--las solicitudes de maria muñoz
+SELECT * FROM solicitud INNER JOIN empleado ON solicitud.id_empleado = empleado.id_empleado WHERE empleado.nombre = 'maria muñoz';--las solicitudes que pertenecen a la empleada maria muñoz
 
 SELECT mascota.nombre,propietario.nombre FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre = 'Camilo murillo';--Las mascotas que pertenecen a camilo murillo
 
