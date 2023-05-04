@@ -204,11 +204,11 @@ SELECT * FROM solicitud INNER JOIN empleado ON solicitud.id_empleado = empleado.
 
 SELECT * FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre = 'Camilo murillo';--Las mascotas que pertenecen al propietario camilo murillo
 
-SELECT * FROM factura RIGHT JOIN servicio ON factura.id_factura = servicio.id_servicio;-- nos muestra  la tabla mascota y de servicios.
+SELECT * FROM factura RIGHT JOIN servicio ON factura.id_factura = servicio.id_servicio;-- nos muestra la tabla mascota y de servicios.
 
-SELECT mascota.nombre,propietario.nombre FROM mascota RIGHT JOIN propietario ON mascota.id_propietario= propietario.id_propietario WHERE mascota.id_mascota IS NULL;--Los campos que son nulos en mascota
+SELECT * FROM mascota RIGHT JOIN propietario ON mascota.id_propietario= propietario.id_propietario ;-- la tabla muestra la mascota y dueño de la mascota
 
-SELECT * FROM `mascota` LEFT JOIN propietario ON mascota.id_mascota =propietario.id_propietario WHERE propietario.id_propietario IS NULL;--Los campos que son nulos en la tabla mascota
+SELECT * FROM `mascota` LEFT JOIN propietario ON mascota.id_mascota =propietario.id_propietario WHERE propietario.id_propietario ;--Los campos que son nulos en la tabla mascota
 
 SELECT * FROM `factura` LEFT JOIN servicio ON factura.id_factura =servicio.id_servicio WHERE servicio.id_servicio;--Muestra la factura con el servicio,nombre y precio correspondiente
 
