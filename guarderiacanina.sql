@@ -173,30 +173,48 @@ INSERT INTO solicitud( numero_horas, pago_horas,id_servicio,id_mascota,id_emplea
     (15, 450000,15,45,15,15);
 
 -- Consultas 
-SELECT * FROM `servicio` WHERE precio >= 25000 GROUP BY precio;
-SELECT * FROM `servicio` WHERE precio <= 25000 GROUP BY precio;
-SELECT * FROM `servicio` WHERE precio = 50000 GROUP BY precio;
-SELECT * FROM servicio WHERE precio =(SELECT MAX(precio) FROM servicio);
-SELECT * FROM servicio WHERE precio =(SELECT MIN(precio) FROM servicio);
+SELECT * FROM `servicio` WHERE precio >= 25000 GROUP BY precio; --Servicio que tiene un precio mayor o igual a 25000
+
+SELECT * FROM `servicio` WHERE precio <= 40000 GROUP BY precio; ---Servicio que tiene un precio menor o igual a 40000
+
+SELECT * FROM `servicio` WHERE precio = 50000 GROUP BY precio;--Servicio que tiene como precio 50000
+
+SELECT * FROM servicio WHERE precio =(SELECT MAX(precio) FROM servicio);--Servicios  mas costosos 
+
+SELECT * FROM servicio WHERE precio =(SELECT MIN(precio) FROM servicio);--servicio mas  economico
+
 SELECT mascota.id_mascota, mascota.nombre, mascota.raza
-FROM mascota;
+FROM mascota;--Muestra el identificador de la mascota, nombre y  su raza 
+
 SELECT empleado.id_empleado, empleado.nombre, empleado.estado
-FROM empleado;
-SELECT * FROM empleado WHERE nombre LIKE 'A%';
-SELECT * FROM mascota WHERE nombre LIKE 'P%';
-SELECT * FROM propietario WHERE nombre LIKE '%z';
+FROM empleado;--Muestra el identificador del empleado, nombre y su estado
+
+SELECT * FROM empleado WHERE nombre LIKE 'A%';--Todos los nombres que empiezan con la letra A
+
+SELECT * FROM mascota WHERE nombre LIKE 'P%';--Todos los nombres que empiezan con la letra P
+
+SELECT * FROM propietario WHERE nombre LIKE '%z';--Todos los nombres que terminan con la letra Z
 
 
 --Joins
 
-SELECT * FROM mascota INNER JOIN propietario ON mascota.id_propietario = propietario.id_propietario WHERE propietario.nombre = 'samuel andres peña';
-SELECT * FROM solicitud INNER JOIN empleado ON solicitud.id_empleado = empleado.id_empleado WHERE empleado.nombre = 'maria muñoz';
-SELECT mascota.nombre,propietario.nombre FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre = 'Camilo murillo';
-SELECT factura.total,servicio.nombre FROM factura RIGHT JOIN servicio ON factura.id_servicio = servicio.id_servicio WHERE factura.id_factura IS NULL;
-SELECT mascota.nombre,propietario.nombre FROM mascota RIGHT JOIN propietario ON mascota.id_propietario= propietario.id_propietario WHERE mascota.id_mascota IS NULL;
-SELECT * FROM `mascota` LEFT JOIN propietario ON mascota.id_mascota =propietario.id_propietario WHERE propietario.id_propietario IS NULL;
-SELECT * FROM `factura` LEFT JOIN servicio ON factura.id_factura =servicio.id_servicio WHERE servicio.id_servicio;
-SELECT * FROM `factura` LEFT JOIN servicio ON factura.id_factura =servicio.id_servicio WHERE servicio.id_servicio IS NULL;
-SELECT mascota.nombre,propietario.nombre FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre != 'samuel andres peña';
-SELECT factura.total,servicio.nombre FROM factura INNER JOIN servicio ON factura.id_factura = servicio.id_servicio WHERE servicio.nombre != 'Guarderia';
+SELECT * FROM mascota INNER JOIN propietario ON mascota.id_propietario = propietario.id_propietario WHERE propietario.nombre = 'samuel andres peña';--Mascotas que pertenecen a Samuel andres peña
+
+SELECT * FROM solicitud INNER JOIN empleado ON solicitud.id_empleado = empleado.id_empleado WHERE empleado.nombre = 'maria muñoz';--las solicitudes de maria muñoz
+
+SELECT mascota.nombre,propietario.nombre FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre = 'Camilo murillo';--Las mascotas que pertenecen a camilo murillo
+
+SELECT factura.total,servicio.nombre FROM factura RIGHT JOIN servicio ON factura.id_servicio = servicio.id_servicio WHERE factura.id_factura IS NULL;-- Los campos que son nulos en la factura
+
+SELECT mascota.nombre,propietario.nombre FROM mascota RIGHT JOIN propietario ON mascota.id_propietario= propietario.id_propietario WHERE mascota.id_mascota IS NULL;--Los campos que son nulos en mascota
+
+SELECT * FROM `mascota` LEFT JOIN propietario ON mascota.id_mascota =propietario.id_propietario WHERE propietario.id_propietario IS NULL;--Los campos que son nulos en la tabla mascota
+
+SELECT * FROM `factura` LEFT JOIN servicio ON factura.id_factura =servicio.id_servicio WHERE servicio.id_servicio;--Muestra la factura con el servicio,nombre y precio correspondiente
+
+SELECT * FROM `factura` LEFT JOIN servicio ON factura.id_factura =servicio.id_servicio WHERE servicio.id_servicio IS NULL;--Los campos nulos en la factura
+
+SELECT mascota.nombre,propietario.nombre FROM mascota INNER JOIN propietario ON mascota.id_mascota = propietario.id_propietario WHERE propietario.nombre != 'samuel andres peña';--Las mascotas que pertenecen a un propietario menos a samuel andres peña
+
+SELECT factura.total,servicio.nombre FROM factura INNER JOIN servicio ON factura.id_factura = servicio.id_servicio WHERE servicio.nombre != 'Guarderia';--Las facturas con los servicios excepto las que tinenen guarderia 
 
