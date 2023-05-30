@@ -34,7 +34,6 @@ CREATE TABLE servicio (
 );
 
 --nuevo
--- Creación de tabla empleado
 CREATE TABLE empleado (
     id_empleado INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único del empleado
     nombre VARCHAR(50) NOT NULL, -- Nombre del empleado
@@ -42,6 +41,7 @@ CREATE TABLE empleado (
     estado BOOLEAN NOT NULL -- Estado del empleado (activo/inactivo)
 );
 
+-- Creación de tabla empleado
 
 
 
