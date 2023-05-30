@@ -19,9 +19,6 @@ CREATE TABLE propietario (
     direccion VARCHAR(50) NOT NULL -- Dirección del propietario
 );
 
-
-
-
 -- Creacion de tabla servicio
 CREATE TABLE servicio (
     id_servicio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
