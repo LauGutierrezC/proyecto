@@ -58,7 +58,15 @@ CREATE TABLE factura (
     total INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio));
  
-
+--nuevo
+-- Creación de tabla factura 
+CREATE TABLE factura (
+    id_factura INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único de la factura
+    id_servicio INT UNSIGNED NOT NULL, -- Identificador del servicio asociado a la factura
+    total INT UNSIGNED NOT NULL, -- Total de la factura
+    FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio) -- Clave foránea que referencia la tabla servicio
+);
+ 
 
 
 
