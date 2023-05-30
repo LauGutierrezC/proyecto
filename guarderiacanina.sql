@@ -61,6 +61,8 @@ CREATE TABLE factura (
  
 
 
+
+
 -- Creacion de tabla mascota
 CREATE TABLE  mascota (
     id_mascota INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
