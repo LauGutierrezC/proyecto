@@ -42,6 +42,14 @@ CREATE TABLE empleado (
     
     -nuev-
     
+-- Creación de tabla empleado
+CREATE TABLE empleado (
+    id_empleado INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único del empleado
+    nombre VARCHAR(50) NOT NULL, -- Nombre del empleado
+    telefono INT UNSIGNED NOT NULL, -- Teléfono del empleado
+    estado BOOLEAN NOT NULL -- Estado del empleado (activo/inactivo)
+);
+
 
 -- Creacion de tabla factura 
 CREATE TABLE factura (
