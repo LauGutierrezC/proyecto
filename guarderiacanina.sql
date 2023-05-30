@@ -81,6 +81,7 @@ CREATE TABLE  mascota (
     id_propietario INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_propietario) REFERENCES propietario(id_propietario));
     
+    --vo
     
 -- Creacion de tabla solicitud 
 CREATE TABLE solicitud (
