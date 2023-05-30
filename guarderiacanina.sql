@@ -33,24 +33,15 @@ CREATE TABLE servicio (
     precio INT UNSIGNED NOT NULL -- Precio del servicio
 );
 
---nuevo
-CREATE TABLE empleado (
-    id_empleado INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único del empleado
-    nombre VARCHAR(50) NOT NULL, -- Nombre del empleado
-    telefono INT UNSIGNED NOT NULL, -- Teléfono del empleado
-    estado BOOLEAN NOT NULL -- Estado del empleado (activo/inactivo)
-);
-
--- Creación de tabla empleado
-
-
-
 -- Creacion de tabla empleado
 CREATE TABLE empleado (
     id_empleado INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR (50) NOT NULL,
     telefono INT UNSIGNED NOT NULL,
     estado BOOLEAN NOT NULL);
+    
+    -nuev-
+    
 
 -- Creacion de tabla factura 
 CREATE TABLE factura (
