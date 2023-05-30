@@ -9,8 +9,8 @@ CREATE TABLE propietario(
     telefono INT  UNSIGNED NOT NULL,
     direccion VARCHAR (50) NOT NULL);
     
-    CREATE DATABASE guarderia_can;
-
+    CREATE DATABASE guarderia_ca;
+--nuevi
 -- Creación de tabla propietario
 CREATE TABLE propietario (
     id_propietario INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único del propietario
