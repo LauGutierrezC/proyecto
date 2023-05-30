@@ -112,6 +112,25 @@ CREATE TABLE solicitud (
     FOREIGN KEY (id_factura) REFERENCES factura(id_factura));
 
 
+--nuev
+
+
+-- Creación de tabla solicitud 
+CREATE TABLE solicitud (
+    id_solicitud INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único de la solicitud
+    fecha_ejecucion DATE NOT NULL, -- Fecha de inicio de la solicitud
+    fecha_final DATE NOT NULL, -- Fecha de finalización de la solicitud
+    numero_horas INT UNSIGNED NOT NULL, -- Número de horas de la solicitud
+    pago_horas INT UNSIGNED NOT NULL, -- Pago por horas de la solicitud
+    id_servicio INT UNSIGNED NOT NULL, -- Identificador del servicio asociado a la solicitud
+    id_mascota INT UNSIGNED NOT NULL, -- Identificador de la mascota asociada a la solicitud
+    id_empleado INT UNSIGNED NOT NULL, -- Identificador del empleado asociado a la solicitud
+    id_factura INT UNSIGNED NOT NULL, -- Identificador de la factura asociada a la solicitud
+    FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio), -- Clave foránea que referencia la tabla servicio
+    FOREIGN KEY (id_mascota) REFERENCES mascota(id_mascota), -- Clave foránea que referencia la tabla mascota
+    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado))--Clave foranea que referencia la tabla empleado
+
+
 -- Inserciones para la tabla 'propietario'
 INSERT INTO propietario(nombre, telefono,direccion) VALUES
     ('samuel andres peña' , 3254567876, 'centro'),
