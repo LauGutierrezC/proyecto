@@ -25,6 +25,19 @@ CREATE TABLE servicio (
     nombre VARCHAR(50) NOT NULL,
     precio INT UNSIGNED NOT NULL);
 
+--nuevvo
+-- Creación de tabla servicio
+CREATE TABLE servicio (
+    id_servicio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único del servicio
+    nombre VARCHAR(50) NOT NULL, -- Nombre del servicio
+    precio INT UNSIGNED NOT NULL -- Precio del servicio
+);
+
+
+
+
+
+
 -- Creacion de tabla empleado
 CREATE TABLE empleado (
     id_empleado INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
