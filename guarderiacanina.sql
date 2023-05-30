@@ -81,8 +81,20 @@ CREATE TABLE  mascota (
     id_propietario INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_propietario) REFERENCES propietario(id_propietario));
     
-    --vo
-    
+    v-nuevo
+   -- Creación de tabla mascota
+CREATE TABLE mascota (
+    id_mascota INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único de la mascota
+    nombre VARCHAR(50) NOT NULL, -- Nombre de la mascota
+    raza VARCHAR(50) NOT NULL, -- Raza de la mascota
+    tipo VARCHAR(50) NOT NULL, -- Tipo de mascota (perro, gato, etc.)
+    fecha_nacimiento DATE NOT NULL, -- Fecha de nacimiento de la mascota
+    estado BOOLEAN NOT NULL, -- Estado de la mascota (activo/inactivo)
+    id_propietario INT UNSIGNED NOT NULL, -- Identificador del propietario de la mascota
+    FOREIGN KEY (id_propietario) REFERENCES propietario(id_propietario) -- Clave foránea que referencia la tabla propietario
+);
+   
+   
 -- Creacion de tabla solicitud 
 CREATE TABLE solicitud (
     id_solicitud INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
