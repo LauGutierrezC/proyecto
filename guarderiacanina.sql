@@ -149,6 +149,7 @@ INSERT INTO propietario(nombre, telefono,direccion) VALUES
     ('esteban medina' , 323456567, 'chapinero'),
     ('fabian muñoz' , 3144567876, '31 mayo');
     
+    
         -- Inserciones para la tabla 'servicio'
 INSERT INTO servicio (nombre,precio) VALUES
     ('Paseo', 25000),
