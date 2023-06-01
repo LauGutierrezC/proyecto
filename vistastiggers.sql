@@ -1,217 +1,124 @@
---Triggers
-
-    -- Trigger para la tabla propietario: antes de la inserción, modificación o eliminación
--- Verifica que el teléfono sea un número de 9 dígitos y la dirección no esté vacía
-CREATE TRIGGER propietario_validacion
-BEFORE INSERT OR UPDATE ON propietario
+--Disparador para asegurarse de que el nombre del propietario no esté vacío
+DELIMITER //
+CREATE TRIGGER tr_nombre_propietario_not_empty
+BEFORE INSERT ON propietario
 FOR EACH ROW
 BEGIN
-    IF LENGTH(NEW.telefono) != 9 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El teléfono debe ser un número de 9 dígitos';
+    IF NEW.nombre = '' OR NEW.nombre IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El nombre del propietario no puede estar vacío.';
     END IF;
-    IF NEW.direccion = '' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La dirección no puede estar vacía';
+END //
+DELIMITER ;
+
+--Disparador para verificar que el teléfono del propietario sea un número positivo:
+
+DELIMITER //
+CREATE TRIGGER tr_telefono_propietario_positive
+BEFORE INSERT ON propietario
+FOR EACH ROW
+BEGIN
+    IF NEW.telefono <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El teléfono del propietario debe ser un número positivo.';
     END IF;
-END;
+END //
+DELIMITER ;
 
--- Trigger para la tabla servicio: después de la inserción, modificación o eliminación
--- Actualiza el precio máximo de los servicios en la tabla propietario
-CREATE TRIGGER servicio_actualizar_precio_max
-AFTER INSERT OR UPDATE OR DELETE ON servicio
-FOR EACH ROW
-BEGIN
-    UPDATE propietario
-    SET precio_maximo = (SELECT MAX(precio) FROM servicio);
-END;
-
--- Trigger para la tabla empleado: después de la eliminación
--- Elimina las solicitudes asociadas al empleado eliminado
-CREATE TRIGGER empleado_eliminar_solicitudes
-AFTER DELETE ON empleado
-FOR EACH ROW
-BEGIN
-    DELETE FROM solicitud WHERE id_empleado = OLD.id_empleado;
-END;
-
--- Trigger para la tabla factura: antes de la inserción
--- Calcula el total de la factura como el precio del servicio multiplicado por el número de horas
-CREATE TRIGGER factura_calcular_total
-BEFORE INSERT ON factura
-FOR EACH ROW
-BEGIN
-    SET NEW.total = (SELECT precio FROM servicio WHERE id_servicio = NEW.id_servicio) * (SELECT numero_horas FROM solicitud WHERE id_factura = NEW.id_factura);
-END;
-
--- Trigger para la tabla mascota: antes de la eliminación
--- Verifica que la mascota no esté asociada a ninguna solicitud antes de eliminarla
-CREATE TRIGGER mascota_verificar_solicitudes
-BEFORE DELETE ON mascota
-FOR EACH ROW
-BEGIN
-    IF EXISTS (SELECT * FROM solicitud WHERE id_mascota = OLD.id_mascota) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La mascota está asociada a una solicitud y no puede ser eliminada';
-    END IF;
-END;
-
--- Trigger para la tabla solicitud: después de la inserción o modificación
--- Actualiza el estado del propietario de la mascota si la solicitud está completada
-CREATE TRIGGER solicitud_actualizar_estado_propietario
-AFTER INSERT OR UPDATE ON solicitud
-FOR EACH ROW
-BEGIN
-    DECLARE estado_propietario BOOLEAN;
-    SET estado_propietario = (SELECT estado FROM mascota WHERE id_mascota = NEW.id_mascota);
-    
-    IF NEW.fecha_final < CURRENT_DATE AND NEW.estado = 1 THEN
-        UPDATE mascota SET estado = 0 WHERE id_mascota = NEW.id_mascota;
-    ELSEIF NEW.fecha_final >= CURRENT_DATE AND NEW.estado = 0 AND estado_propietario = 1 THEN
-        UPDATE mascota SET estado = 1 WHERE id_mascota = NEW.id_mascota;
-    END IF;
-END;
-
-
--- Trigger para actualizar la columna direccion cuando se actualiza la columna telefono
-CREATE TRIGGER actualizar_direccion
-AFTER 
-AFTER
-UPDATE ON propietario
-FOR EACH ROW
-BEGIN
-    IF NEW.telefono 
-    IF NEW.telefono
-<> OLD.telefono THEN
-        UPDATE propietario SET direccion = CONCAT(NEW.direccion, ' - Teléfono actualizado') WHERE id_propietario = NEW.id_propietario;
-
-END IF;
-END;
-
--- Este trigger se ejecuta después de que se actualiza una fila en la tabla "propietario". Verifica si el número de teléfono ha cambiado y, de ser así, actualiza la columna "direccion" concatenando el nuevo número de teléfono.
-
--- Trigger para eliminar las mascotas asociadas cuando se elimina un propietario
-CREATE TRIGGER eliminar_mascotas
-AFTER 
-AFTER
-DELETE ON propietario
-FOR EACH ROW
-BEGIN
-    DELETE FROM mascota WHERE id_propietario = OLD.id_propietario;
-END;
--- Este trigger se ejecuta después de que se elimina una fila de la tabla "propietario". Elimina todas las filas correspondientes en la tabla "mascota" que estén asociadas al propietario eliminado.
-
--- Trigger para evitar la inserción de un servicio con un precio menor que 0
-CREATE TRIGGER verificar_precio
-BEFORE 
-BE
-INSERT ON servicio
-FOR EACH ROW
-BEGIN
-    IF NEW.precio 
-    IF
-< 0 THEN
-        SIGNAL 
-       
-SQLSTATE '45000' SET MESSAGE_TEXT = 'Precio inválido. El precio debe ser mayor o igual a 0.';
-    
-   
-END IF;
-
-END;
--- Este trigger se ejecuta antes de insertar una fila en la tabla "servicio". Verifica si el precio es menor que 0 y, de ser así, genera un error.
-
--- Trigger para actualizar el total en la tabla "factura" cuando se actualiza el precio en la tabla "servicio"
-CREATE TRIGGER actualizar_total_factura
-AFTER UPDATE ON servicio
-FOR EACH ROW
-BEGIN
-    
-   
-UPDATE factura SET total = NEW.precio WHERE id_servicio = NEW.id_servicio;
-END;
--- Este trigger se ejecuta después de actualizar una fila en la tabla "servicio". Actualiza el campo "total" en la tabla "factura" con el nuevo precio del servicio correspondiente.
-
--- Trigger para establecer el estado como "inactivo" cuando se elimina un empleado
-CREATE TRIGGER establecer_estado_inactivo
-BEFORE DELETE ON empleado
-FOR EACH ROW
-BEGIN
-    UPDATE empleado SET estado = FALSE WHERE id_empleado = OLD.id_empleado;
-END;
--- Este trigger se ejecuta antes de eliminar una fila de la tabla "empleado". Establece el estado del empleado como "inactivo" antes de la eliminación.
-
--- Trigger para evitar la actualización del estado de un empleado a NULL
-CREATE TRIGGER evitar_null_estado
-BEFORE UPDATE ON empleado
-FOR EACH ROW
-BEGIN
-    IF NEW.estado 
-    IF
-IS NULL THEN
-        SIGNAL 
-        SIGNAL
-SQLSTATE '45000' SET MESSAGE_TEXT = 'El estado no puede ser NULL.';
-    END IF;
-END;
--- Este trigger se ejecuta antes de actualizar una fila en la tabla "empleado". Verifica si el nuevo valor del estado es NULL y, de ser así, genera un error.
-
---Trigger para actualizar la columna direccion cuando se actualiza la columna telefono
-CREATE TRIGGER actualizar_direccion
-AFTER UPDATE ON propietario
-FOR EACH ROW
-BEGIN
-    IF NEW.telefono <> OLD.telefono THEN
-        UPDATE propietario SET direccion = CONCAT(NEW.direccion, ' - Teléfono actualizado') WHERE id_propietario = NEW.id_propietario;
-    END IF;
-END;
--- Este trigger se ejecuta después de que se actualiza una fila en la tabla "propietario". Verifica si el número de teléfono ha cambiado y, de ser así, actualiza la columna "direccion" concatenando el nuevo número de teléfono.
-
--- Trigger para eliminar las mascotas asociadas cuando se elimina un propietario
-CREATE TRIGGER eliminar_mascotas
-AFTER DELETE ON propietario
-FOR EACH ROW
-BEGIN
-    DELETE FROM mascota WHERE id_propietario = OLD.id_propietario;
-END;
--- Este trigger se ejecuta después de que se elimina una fila de la tabla "propietario". Elimina todas las filas correspondientes en la tabla "mascota" que estén asociadas al propietario eliminado.
-
--- Trigger para evitar la inserción de un servicio con un precio menor que 0
-CREATE TRIGGER verificar_precio
+--Disparador para asegurarse de que el precio del servicio sea un número positivo:
+DELIMITER //
+CREATE TRIGGER tr_precio_servicio_positive
 BEFORE INSERT ON servicio
 FOR EACH ROW
 BEGIN
-    IF NEW.precio < 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Precio inválido. El precio debe ser mayor o igual a 0.';
+    IF NEW.precio <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El precio del servicio debe ser un número positivo.';
     END IF;
-END;
--- Este trigger se ejecuta antes de insertar una fila en la tabla "servicio". Verifica si el precio es menor que 0 y, de ser así, genera un error.
+END //
+DELIMITER ;
 
--- Trigger para actualizar el total en la tabla "factura" cuando se actualiza el precio en la tabla "servicio"
-CREATE TRIGGER actualizar_total_factura
-AFTER UPDATE ON servicio
+--Disparador para validar el estado del empleado (solo permitir activo o inactivo):
+DELIMITER //
+CREATE TRIGGER tr_estado_empleado_valid
+BEFORE INSERT ON empleado
 FOR EACH ROW
 BEGIN
-    UPDATE factura SET total = NEW.precio WHERE id_servicio = NEW.id_servicio;
-END;
--- Este trigger se ejecuta después de actualizar una fila en la tabla "servicio". Actualiza el campo "total" en la tabla "factura" con el nuevo precio del servicio correspondiente.
-
--- Trigger para establecer el estado como "inactivo" cuando se elimina un empleado
-CREATE TRIGGER establecer_estado_inactivo
-BEFORE DELETE ON empleado
-FOR EACH ROW
-BEGIN
-    UPDATE empleado SET estado = FALSE WHERE id_empleado = OLD.id_empleado;
-END;
--- Este trigger se ejecuta antes de eliminar una fila de la tabla "empleado". Establece el estado del empleado como "inactivo" antes de la eliminación.
-
--- Trigger para evitar la actualización del estado de un empleado a NULL
-CREATE TRIGGER evitar_null_estado
-BEFORE UPDATE ON empleado
-FOR EACH ROW
-BEGIN
-    IF NEW.estado IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El estado no puede ser NULL.';
+    IF NEW.estado != 0 AND NEW.estado != 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El estado del empleado debe ser 0 (inactivo) o 1 (activo).';
     END IF;
-END;
--- Este trigger se ejecuta antes de actualizar una fila en la tabla "empleado". Verifica si el nuevo valor del estado es NULL y, de ser así, genera un error.
+END //
+DELIMITER ;
+
+--Disparador para asegurarse de que el total de la factura sea un número positivo:
+DELIMITER //
+CREATE TRIGGER tr_total_factura_positive
+BEFORE INSERT ON factura
+FOR EACH ROW
+BEGIN
+    IF NEW.total <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El total de la factura debe ser un número positivo.';
+    END IF;
+END //
+DELIMITER ;
+--Disparador para validar el tipo de mascota (solo permitir "perro", "gato" u "otros"):
+DELIMITER //
+CREATE TRIGGER tr_tipo_mascota_valid
+BEFORE INSERT ON mascota
+FOR EACH ROW
+BEGIN
+    IF NEW.tipo != 'perro' AND NEW.tipo != 'gato' AND NEW.tipo != 'otros' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El tipo de mascota debe ser "perro", "gato" u "otros".';
+    END IF;
+END //
+DELIMITER ;
+--Disparador para asegurarse de que la fecha de nacimiento de la mascota no sea futura:
+DELIMITER //
+CREATE TRIGGER tr_fecha_nacimiento_mascota_past
+BEFORE INSERT ON mascota
+FOR EACH ROW
+BEGIN
+    IF NEW.fecha_nacimiento > CURDATE() THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La fecha de nacimiento de la mascota no puede ser futura.';
+    END IF;
+END //
+DELIMITER ;
+
+--Disparador para asegurarse de que el número de horas de la solicitud sea un número positivo:
+DELIMITER //
+CREATE TRIGGER tr_numero_horas_solicitud_positive
+BEFORE INSERT ON solicitud
+FOR EACH ROW
+BEGIN
+    IF NEW.numero_horas <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El número de horas de la solicitud debe ser un número positivo.';
+    END IF;
+END //
+DELIMITER ;
+--Disparador para asegurarse de que el pago por horas de la solicitud sea un número positivo:
+DELIMITER //
+CREATE TRIGGER tr_pago_horas_solicitud_positive
+BEFORE INSERT ON solicitud
+FOR EACH ROW
+BEGIN
+    IF NEW.pago_horas <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El pago por horas de la solicitud debe ser un número positivo.';
+    END IF;
+END //
+DELIMITER ;
+
+  --Disparador para validar que la fecha final de la solicitud sea posterior a la fecha de ejecución:
+
+
+DELIMITER //
+CREATE TRIGGER tr_fecha_final_solicitud_valid
+BEFORE INSERT ON solicitud
+FOR EACH ROW
+BEGIN
+    IF NEW.fecha_final <= NEW.fecha_ejecucion THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La fecha final de la solicitud debe ser posterior a la fecha de ejecución.';
+    END IF;
+END //
+DELIMITER ;
+
+
 
 
 --Vistas
