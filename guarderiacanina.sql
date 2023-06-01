@@ -10,7 +10,7 @@ CREATE TABLE propietario(
     direccion VARCHAR (50) NOT NULL);
     
     CREATE DATABASE guarderia_ca;
---nuevi
+--nuevo
 -- Creación de tabla propietario
 CREATE TABLE propietario (
     id_propietario INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, -- Identificador único del propietario
