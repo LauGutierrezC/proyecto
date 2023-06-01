@@ -187,14 +187,141 @@ FROM mascota
 JOIN propietario ON mascota.id_propietario = propietario.id_propietario;
 --esta vista muestra la direccion de cada propietario dando el barrio de cada uno
 
---Funciones Y procedimientos 
-Función "agregar_propietario"--: Enunciado: Esta función permite agregar un nuevo propietario a la base de datos. Parámetros de entrada: nombre (cadena de caracteres), teléfono (entero sin signo), dirección (cadena de caracteres). Parámetro de salida: Ninguno.
-Función "agregar_servicio"--: Enunciado: Esta función permite agregar un nuevo servicio a la base de datos. Parámetros de entrada: nombre (cadena de caracteres), precio (entero sin signo). Parámetro de salida: Ninguno.
-Función "agregar_empleado"--: Enunciado: Esta función permite agregar un nuevo empleado a la base de datos. Parámetros de entrada: nombre (cadena de caracteres), teléfono (entero sin signo), estado (booleano). Parámetro de salida: Ninguno.
-Función "agregar_factura"--: Enunciado: Esta función permite agregar una nueva factura a la base de datos.
-Función "agregar_mascota"--: Enunciado: Esta función permite agregar una nueva mascota a la base de datos. Parámetros de entrada: nombre (cadena de caracteres), raza (cadena de caracteres), tipo (cadena de caracteres), fecha_n
-Función "agregar_solicitud"--: Enunciado: Esta función
-Procedimiento "actualizar_propietario"--: Enunciado: Este procedimiento
-Procedimiento "actualizar_servicio"--: Enunciado: Este procedimiento permite actualizar los datos de un servicio existente en la base de datos. Parámetros de entrada: id_servicio (entero sin signo), nombre (cadena de caracteres), precio (entero sin signo). Parámetro de salida: Ninguno.
-Procedimiento "actualizar_empleado"--: Enunciado: Este procedimiento permite actualizar los datos de un empleado existente en la base de datos. Parámetros de entrada: id_empleado (entero sin signo), nombre (cadena de caracteres), telefono (entero sin signo), estado (booleano). Parámetro de salida: Ninguno.
-Procedimiento "actualizar_mascota"--: Enunciado: Este procedimiento permite actualizar los datos de una mascota existente en la base de datos.
+--FUNCIONES Y PROCEDIMIENTOS
+
+--Función para obtener el nombre del propietario según su ID:
+
+DELIMITER //
+
+CREATE FUNCTION obtener_nombre_propietario(id_propietario INT UNSIGNED) RETURNS VARCHAR(50)
+BEGIN
+    DECLARE nombre_propietario VARCHAR(50);
+    
+    SELECT nombre INTO nombre_propietario
+    FROM propietario
+    WHERE id_propietario = id_propietario;
+    
+    RETURN nombre_propietario;
+END //
+
+DELIMITER ;
+
+--Procedimiento para agregar un nuevo propietario:
+
+DELIMITER //
+
+CREATE PROCEDURE agregar_propietario(nombre VARCHAR(50), telefono INT UNSIGNED, direccion VARCHAR(50))
+BEGIN
+    INSERT INTO propietario (nombre, telefono, direccion)
+    VALUES (nombre, telefono, direccion);
+END //
+
+DELIMITER ;
+--Procedimiento para actualizar el estado de un empleado:
+DELIMITER //
+
+CREATE PROCEDURE actualizar_estado_empleado(id_empleado INT UNSIGNED, nuevo_estado BOOLEAN)
+BEGIN
+    UPDATE empleado
+    SET estado = nuevo_estado
+    WHERE id_empleado = id_empleado;
+END //
+
+DELIMITER ;
+
+-- Función para obtener el total de ingresos generados por un servicio:
+
+DELIMITER //
+
+CREATE FUNCTION obtener_total_ingresos_servicio(id_servicio INT UNSIGNED) RETURNS INT
+BEGIN
+    DECLARE total_ingresos INT;
+    
+    SELECT SUM(total) INTO total_ingresos
+    FROM factura
+    WHERE id_servicio = id_servicio;
+    
+    RETURN total_ingresos;
+END //
+
+DELIMITER ;
+
+--Procedimiento para agregar una nueva mascota:
+DELIMITER //
+
+CREATE PROCEDURE agregar_mascota(nombre VARCHAR(50), raza VARCHAR(50), tipo VARCHAR(50), fecha_nacimiento DATE, estado BOOLEAN, id_propietario INT UNSIGNED)
+BEGIN
+    INSERT INTO mascota (nombre, raza, tipo, fecha_nacimiento, estado, id_propietario)
+    VALUES (nombre, raza, tipo, fecha_nacimiento, estado, id_propietario);
+END //
+
+DELIMITER ;
+
+--Procedimiento para generar una nueva factura:
+DELIMITER //
+
+CREATE PROCEDURE generar_factura(id_servicio INT UNSIGNED, total INT UNSIGNED)
+BEGIN
+    INSERT INTO factura (id_servicio, total)
+    VALUES (id_servicio, total);
+END //
+
+DELIMITER ;
+
+--Función para obtener el número de solicitudes realizadas por una mascota:
+DELIMITER //
+
+CREATE FUNCTION obtener_numero_solicitudes_mascota(id_mascota INT UNSIGNED) RETURNS INT
+BEGIN
+    DECLARE numero_solicitudes INT;
+    
+    SELECT COUNT(*) INTO numero_solicitudes
+    FROM solicitud
+    WHERE id_mascota = id_mascota;
+    
+    RETURN numero_solicitudes;
+END //
+
+DELIMITER ;
+
+--Procedimiento para asignar un empleado a una solicitud:
+DELIMITER //
+
+CREATE PROCEDURE asignar_empleado_solicitud(id_solicitud INT UNSIGNED, id_empleado INT UNSIGNED)
+BEGIN
+    UPDATE solicitud
+    SET id_empleado = id_empleado
+    WHERE id_solicitud = id_solicitud;
+END //
+
+DELIMITER ;
+
+--Procedimiento para eliminar un servicio y sus facturas asociadas:
+DELIMITER //
+
+CREATE PROCEDURE eliminar_servicio(id_servicio INT UNSIGNED)
+BEGIN
+    DELETE FROM factura
+    WHERE id_servicio = id_servicio;
+    
+    DELETE FROM servicio
+    WHERE id_servicio = id_servicio;
+END //
+
+DELIMITER ;
+
+--Función para obtener el promedio de pago por horas de todas las solicitudes:
+DELIMITER //
+
+CREATE FUNCTION obtener_promedio_pago_horas() RETURNS DECIMAL(10, 2)
+BEGIN
+    DECLARE promedio_pago DECIMAL(10, 2);
+    
+    SELECT AVG(pago_horas) INTO promedio_pago
+    FROM solicitud;
+    
+    RETURN promedio_pago;
+END //
+
+DELIMITER ;
+
